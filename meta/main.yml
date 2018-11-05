@@ -7,7 +7,6 @@ galaxy_info:
     - name: EL
       versions:
         - 7
-  categories:
-    - logging
   galaxy_tags:
     - logging
+    - monitoring

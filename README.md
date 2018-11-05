@@ -1,10 +1,9 @@
 Role Name
 =========
 
-This role installs/configures a Fluentd (no ssl) with elasticsearch plugin and as a syslog source. It increases file descriptors and modify kernel parameters per Fluentd documentation.
+This role installs/configures Fluentd server (no ssl) with elasticsearch plugin and as a syslog source. It increases file descriptors and modifies kernel parameters per Fluentd documentation.
 
-
-It coul be used with elastic.elasticsearch role. It doesn't handle firewall rules
+It coul be used with elastic.elasticsearch role. It doesn't handle firewall rules-
 
 Requirements
 ------------
@@ -43,7 +42,7 @@ To install Fluentd server:
       hosts: logging
       become: yes
       roles:
-        - { role: jobcespedes.fluentd, tags: ["fluentd"] }
+        - { role: jobcespedes.ansible_role_fluentd, tags: ["fluentd"] }
 
 To configure rsyslog in other system machines for centralized logging
 
