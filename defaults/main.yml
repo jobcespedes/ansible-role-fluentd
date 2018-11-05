@@ -1,0 +1,16 @@
+---
+# defaults file for fluentd
+## Syslog ip and port to listen for
+fluentd_syslog_bind_address: 127.0.0.1
+fluentd_syslog_port: 5140
+## Forward port to listen for
+fluentd_forward_port: 24224
+## Debug port to listen for
+fluentd_debug_port: 24230
+## Elastic host and index
+fluentd_elasticsearch_host: localhost
+fluentd_elasticsearch_port: 9200
+fluentd_elasticsearch_index: fluentd
+fluentd_elasticsearch_type: fluentd
+## Rsyslog config dir
+rsyslog_config_dir: /etc/rsyslog.d

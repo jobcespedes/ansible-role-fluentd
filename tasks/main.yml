@@ -1,0 +1,66 @@
+---
+# tasks file for fluentd
+- name: Increase Max number of File Descriptors
+  pam_limits:
+    domain: "{{item.user}}"
+    limit_type: "{{item.limit_type}}"
+    limit_item: "{{item.limit_item}}"
+    value: "{{item.value}}"
+  with_items:
+    - { user: 'root', limit_type: 'soft', limit_item: 'nofile', value: 65536 }
+    - { user: 'root', limit_type: 'hard', limit_item: 'nofile', value: 65536 }
+    - { user: '*', limit_type: 'soft', limit_item: 'nofile', value: 65536 }
+    - { user: '*', limit_type: 'hard', limit_item: 'nofile', value: 65536 }
+
+- name: Optimize Network Kernel Parameters
+  template:
+    src: 30-fluentd.conf
+    dest: '/etc/sysctl.d/30-fluentd.conf'
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload sysctl
+
+- name: add fluend repo
+  template:
+    src: fluentd.repo
+    dest: /etc/yum.repos.d/fluentd.repo
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Import fluentd GPG Key
+  rpm_key:
+    key: https://packages.treasuredata.com/GPG-KEY-td-agent
+    state: present
+
+- name: Install fluentd
+  package:
+    name: td-agent
+    state: present
+
+- name: Install fluentd rsyslog config
+  lineinfile:
+    dest: '{{ rsyslog_config_dir }}/fluentd.conf'
+    create: yes
+    state: present
+    line: "*.* @127.0.0.1:{{ fluentd_syslog_port }}"
+  notify: restart rsyslogd
+
+- name: Setup fluentd configuration files
+  template:
+    src: td-agent.conf.j2
+    dest: /etc/td-agent/td-agent.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart fluentd
+
+- name: Install fluentd elasticsearch plugin
+  gem:
+    name: fluent-plugin-elasticsearch
+    state: latest
+    include_dependencies: yes
+    user_install: no
+    executable: /usr/sbin/td-agent-gem
+  ignore_errors: false

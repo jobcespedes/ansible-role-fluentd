@@ -1,0 +1,45 @@
+# listen no ssl
+<source>
+  @type forward
+
+{% if fluentd_forward_port is defined %}
+  port {{ fluentd_forward_port }}
+{% endif %}
+{% if fluentd_bind_address is defined %}
+  bind {{ fluentd_bind_address }}
+{% endif %}
+
+</source>
+
+# live debugging agent
+<source>
+  @type debug_agent
+  @id input_debug_agent
+  bind 127.0.0.1
+  port {{ fluentd_debug_port }}
+</source>
+
+# elasticsearch
+<match **>
+  @type elasticsearch
+
+  host {{ fluentd_elasticsearch_host }}
+  port {{ fluentd_elasticsearch_port }}
+  index_name {{ fluentd_elasticsearch_index }}
+  type_name {{ fluentd_elasticsearch_type }}
+
+  # required by kibana
+  logstash_format true
+</match>
+
+# syslog
+<source>
+  @type syslog
+  port {{ fluentd_syslog_port }}
+{% if fluentd_syslog_bind_address is defined %}
+  bind {{ fluentd_syslog_bind_address }}
+{% endif %}
+  tag system.messages
+  priority_key "priority"
+  facility_key "facilityLevel"
+</source>

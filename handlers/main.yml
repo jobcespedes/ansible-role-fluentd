@@ -1,0 +1,12 @@
+---
+# handlers file for fluentd
+- name: restart fluentd
+  service:
+    name: td-agent
+    state: restarted
+- name: restart rsyslogd
+  service:
+    name: rsyslog
+    state: restarted
+- name: reload sysctl
+  shell: sysctl --system

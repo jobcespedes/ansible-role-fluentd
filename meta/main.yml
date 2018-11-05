@@ -1,0 +1,13 @@
+galaxy_info:
+  author: Job Céspedes
+  description: Fluentd (no ssl) with elasticsearch plugin and as a syslog source
+  license: Apache 2.0
+  min_ansible_version: 2.5
+  platforms:
+    - name: EL
+      versions:
+        - 7
+  categories:
+    - logging
+  galaxy_tags:
+    - logging
