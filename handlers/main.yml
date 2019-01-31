@@ -4,6 +4,7 @@
   service:
     name: td-agent
     state: restarted
+    enabled: true
 - name: restart rsyslogd
   service:
     name: rsyslog
